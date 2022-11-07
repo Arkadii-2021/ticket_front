@@ -1,0 +1,215 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #333;
+    background-color: #fff;
+}
+
+.btn {
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  padding: .375rem .75rem;
+  margin-bottom: 20px;
+  margin-left: 410px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  border-radius: .50rem;
+}
+
+.form-control {
+  position: relative;
+  margin-bottom: 5px;
+}
+
+.ticket-container {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-evenly;
+	align-items: center;
+	align-content: center;
+    width: 550px;
+    height: 50px;
+	outline-style: solid;
+	outline-width: 1px;
+}
+
+.ticket-status, .ticket-edit, .ticket-delete {
+	display: flex;
+	justify-content: inherit;
+	align-items: inherit;
+    width: 30px;
+    height: 30px;
+	margin: -15px;
+	outline-style: solid;
+	outline-width: 1px;
+    border-radius: 50%;	
+}
+
+.status-true:after {
+  content: '\2713';
+}
+
+.ticket-name {
+	margin: 15px;
+}
+
+.edit:after {
+  content: '✎';
+}
+
+.ticket-delete:after {
+  content: '✖';
+}
+
+.popup-ticket {
+	position: fixed;
+	width: 525px;
+	height: 148px;
+	background: white;
+	border: 1px solid black;
+	border-radius: 20px 20px;
+}
+
+.popup-ticket-add {
+	position: fixed;
+	width: 525px;
+	height: 260px;
+	background: white;
+	border: 1px solid black;
+	border-radius: 20px 20px;
+}
+
+.btn-ok {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  top: 70%;
+  margin-bottom: 47px;
+  margin-left: 445px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  border-radius: .50rem;
+}
+
+.btn-cancel {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  top: 18%;
+  margin-bottom: 20px;
+  margin-left: 350px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  border-radius: .50rem;
+}
+
+.btn-add-ok {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  top: 83.8%;
+  margin-bottom: 47px;
+  margin-left: 445px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  border-radius: .50rem;
+}
+
+.btn-add-cancel {
+  display: inline-block;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  top: 54%;
+  margin-bottom: 20px;
+  margin-left: 350px;
+  font-size: 1rem;
+  line-height: 1.5;
+  background: none;
+  border-radius: .50rem;
+}
+
+.confirm-title {
+	position: relative;
+	top: -95%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.confirm-title-add {
+	position: relative;
+	top: -52%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.title-description {
+	position: relative;
+	top: -58%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.title-description-full {
+	position: relative;
+	top: -67%;
+    text-align: center;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.text-description-full {
+	position: relative;
+	resize: none;
+	width: 485px;
+	height: 62px;
+	left: 20px;
+	top: -72%;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+
+.text-description {
+	position: relative;
+	resize: none;
+	width: 485px;
+	height: 35px;
+	left: 20px;
+	top: -63%;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.confirm-description {
+	max-width: 480px;
+	max-height: 100px;
+	position: relative;
+	top: -100%;
+	left: 4%;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
