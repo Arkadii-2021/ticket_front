@@ -26,12 +26,12 @@ export function addNewTicket() {
 
       const popupAddTicket = document.createElement('DIV');
       popupAddTicket.classList.add('popup-ticket-add');
-      popupAddTicket.innerHTML = `<button class="btn-add-ok">РћРљ</button>
-        <button class="btn-add-cancel">РћС‚РјРµРЅР°</button>
-        <p class="confirm-title-add">Р”РѕР±Р°РІРёС‚СЊ С‚РёРєРµС‚</p>
-        <p class="title-description">РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ</p>
+      popupAddTicket.innerHTML = `<button class="btn-add-ok">ОК</button>
+        <button class="btn-add-cancel">Отмена</button>
+        <p class="confirm-title-add">Добавить тикет</p>
+        <p class="title-description">Краткое описание</p>
         <textarea class="text-description"></textarea>
-        <p class="title-description-full">РџРѕР»РЅРѕРµ РѕРїРёСЃР°РЅРёРµ</p>
+        <p class="title-description-full">Полное описание</p>
         <textarea class="text-description-full"></textarea>`;
       subscribeWidget.before(popupAddTicket);
       btnAddOk[0].addEventListener('click', () => {
@@ -142,9 +142,9 @@ function addElTicket(objTicket) {
         btn.addEventListener('click', (e) => {
 			const popupDeleteConfirm = document.createElement('DIV');
             popupDeleteConfirm.classList.add('popup-ticket');
-            popupDeleteConfirm.innerHTML = `<button class="btn-ok">РћРљ</button>
-            <button class="btn-cancel">РћС‚РјРµРЅР°</button><p class="confirm-title">РЈРґР°Р»РёС‚СЊ С‚РёРєРµС‚</p>
-            <p class="confirm-description">Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СѓРґР°Р»РёС‚СЊ С‚РёРєРµС‚? Р­С‚Рѕ РґРµР№СЃС‚РІРёРµ РЅРµРѕР±СЂР°С‚РёРјРѕ.</p>`;
+            popupDeleteConfirm.innerHTML = `<button class="btn-ok">ОК</button>
+            <button class="btn-cancel">Отмена</button><p class="confirm-title">Удалить тикет</p>
+            <p class="confirm-description">Вы уверены, что хотите удалить тикет? Это действие необратимо.</p>`;
 	        e.stopPropagation();
       if (document.getElementsByClassName('popup-ticket').length === 0) {
 		  subscribeWidget.before(popupDeleteConfirm);
@@ -186,12 +186,12 @@ function addElTicket(objTicket) {
         edit.addEventListener('click', (e) => {
 		const popupEditTicket = document.createElement('DIV');
         popupEditTicket.classList.add('popup-ticket-add');
-        popupEditTicket.innerHTML = `<button class="btn-change-ok">РћРљ</button>
-        <button class="btn-change-cancel">РћС‚РјРµРЅР°</button>
-        <p class="confirm-title-add">РР·РјРµРЅРёС‚СЊ С‚РёРєРµС‚</p>
-        <p class="title-description">РљСЂР°С‚РєРѕРµ РѕРїРёСЃР°РЅРёРµ</p>
+        popupEditTicket.innerHTML = `<button class="btn-change-ok">ОК</button>
+        <button class="btn-change-cancel">Отмена</button>
+        <p class="confirm-title-add">Изменить тикет</p>
+        <p class="title-description">Краткое описание</p>
         <textarea class="text-description"></textarea>
-        <p class="title-description-full">РџРѕР»РЅРѕРµ РѕРїРёСЃР°РЅРёРµ</p>
+        <p class="title-description-full">Полное описание</p>
         <textarea class="text-description-full"></textarea>`;
 		subscribeWidget.before(popupEditTicket);
 		btnChCancel[0].addEventListener('click', (evt) => {
