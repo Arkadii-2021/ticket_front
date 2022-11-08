@@ -43,6 +43,15 @@ body {
 	outline-width: 1px;
 }
 
+.modal__description {
+	position: fixed;
+	width: 525px;
+	height: 148px;
+	background: white;
+	border: 1px solid black;
+	border-radius: 20px 20px;
+}
+
 .ticket-status, .ticket-edit, .ticket-delete {
 	display: flex;
 	justify-content: inherit;
@@ -64,11 +73,11 @@ body {
 }
 
 .edit:after {
-  content: '✎';
+  content: 'вњЋ';
 }
 
 .ticket-delete:after {
-  content: '✖';
+  content: 'вњ–';
 }
 
 .popup-ticket {
@@ -119,7 +128,7 @@ body {
   border-radius: .50rem;
 }
 
-.btn-add-ok {
+.btn-add-ok, .btn-change-ok {
   display: inline-block;
   position: relative;
   text-align: center;
@@ -134,7 +143,7 @@ body {
   border-radius: .50rem;
 }
 
-.btn-add-cancel {
+.btn-add-cancel, .btn-change-cancel {
   display: inline-block;
   position: relative;
   text-align: center;
@@ -192,7 +201,6 @@ body {
     font-size: 1.1rem;	
 }
 
-
 .text-description {
 	position: relative;
 	resize: none;
@@ -212,4 +220,22 @@ body {
 	left: 4%;
     vertical-align: middle;
     font-size: 1.1rem;	
+}
+
+.confirm__modal__description {
+	max-width: 480px;
+	max-height: 100px;
+	position: relative;
+	top: 0;
+	left: 4%;
+    vertical-align: middle;
+    font-size: 1.1rem;	
+}
+
+.close {
+	position: absolute;
+	top: 0;
+	left: 94%;
+    font-size: 24px;
+    cursor: pointer;	
 }
