@@ -90,7 +90,6 @@ function getAllTickets(objTickets) {
 		});  
 		e.stopPropagation();
 		
-		
     }, false);
   }
   
