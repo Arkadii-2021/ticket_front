@@ -3,6 +3,7 @@ const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
 const btnDelete = subscribeWidget.getElementsByClassName('ticket-delete');
 const btnStatus = subscribeWidget.getElementsByClassName('ticket-status');
 const btnAddOk = document.getElementsByClassName('btn-add-ok');
+const btnAddCancel = document.getElementsByClassName('btn-add-cancel');
 const textDescription = document.getElementsByClassName('text-description');
 const textDescriptionFull = document.getElementsByClassName('text-description-full');
 const btnCancel = document.getElementsByClassName('btn-cancel');
@@ -38,10 +39,14 @@ export function addNewTicket() {
 		  xhrUploadTicket();
         document.getElementsByClassName('popup-ticket-add')[0].remove();
       });
-      textDescription[0].addEventListener('keydown', () => {
-        ticketUserFull.name = textDescription[0].value;
+      btnAddCancel[0].addEventListener('click', () => {
+        document.getElementsByClassName('popup-ticket-add')[0].remove();
       });
-      textDescriptionFull[0].addEventListener('keydown', () => {
+      textDescription[0].addEventListener('keyup', () => {
+        ticketUserFull.name = textDescription[0].value;
+		console.log(ticketUserFull.name);
+      });
+      textDescriptionFull[0].addEventListener('keyup', () => {
         ticketUserFull.description = textDescriptionFull[0].value;
       });
   });
@@ -101,7 +106,7 @@ export function descriptionTicket(idt) {
   xhr.send();
 }
 
-export function changeTicket(idt) {
+function changeTicket(idt) {
 /*   textDescription[0].addEventListener('keydown', () => {
     ticketUserFull.name = textDescription[0].value;
   });
