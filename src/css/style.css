@@ -73,11 +73,11 @@ body {
 }
 
 .edit:after {
-  content: 'вњЋ';
+  content: '✎';
 }
 
 .ticket-delete:after {
-  content: 'вњ–';
+  content: '✖';
 }
 
 .popup-ticket {
