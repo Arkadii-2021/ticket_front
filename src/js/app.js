@@ -1,17 +1,9 @@
-import { addNewTicket, removeTicket, statusTicket, descriptionTicket, changeTicket } from './newTickets';
-import ticketContainerHtmlEl from './ticketContainer';
+import { changeTicket, addNewTicket } from './queries';
+import { ticketContainerHtmlEl, deleteConfirm, renameTicket, descriptionModalWindow } from './ticketContainer';
+import { ticketUserFull } from './dataTicketObj';
 
 const subscribeWidget = document.querySelector('.subscribe');
 const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
-const btnDelete = subscribeWidget.getElementsByClassName('ticket-delete');
-const btnStatus = subscribeWidget.getElementsByClassName('ticket-status');
-const btnCancel = document.getElementsByClassName('btn-cancel');
-const btnChCancel = document.getElementsByClassName('btn-change-cancel');
-const btnOk = document.getElementsByClassName('btn-ok');
-const btnChOk = document.getElementsByClassName('btn-change-ok');
-const popupTicket = document.getElementsByClassName('popup-ticket');
-const editTicket = document.getElementsByClassName('ticket-edit');
-const ticketContainerGeneral = document.getElementsByClassName('ticket-container');
 
 const xhr = new XMLHttpRequest();
 
@@ -40,69 +32,57 @@ function getAllTickets(objTickets) {
     }
     subscribeForm.after(newContainer);
   }
-  
-  for (const btn of btnDelete) {
+    
+  for (const btn of subscribeWidget.getElementsByClassName('ticket-delete')) {
     btn.addEventListener('click', (evt) => {
-      const popupDeleteConfirm = document.createElement('DIV');
-      popupDeleteConfirm.classList.add('popup-ticket');
-      popupDeleteConfirm.innerHTML = `<button class="btn-ok">ОК</button>
-      <button class="btn-cancel">Отмена</button><p class="confirm-title">Удалить тикет</p>
-      <p class="confirm-description">Вы уверены, что хотите удалить тикет? Это действие необратимо.</p>`;
-      subscribeWidget.before(popupDeleteConfirm);
+	  deleteConfirm();
 	  evt.stopPropagation();
-      btnCancel[0].addEventListener('click', (evt) => {
-        popupTicket[0].remove();
+      document.querySelector('.btn-cancel').addEventListener('click', (evt) => {
+        document.querySelector('.popup-ticket').remove();
       });
-      btnOk[0].addEventListener('click', () => {
-        popupTicket[0].remove();
-        removeTicket(evt.target.parentElement.getAttribute('id'));
+      document.querySelector('.btn-ok').addEventListener('click', () => {
+        document.querySelector('.popup-ticket').remove();
+        fetch(`http://localhost:7010/?method=ticketById&id=${evt.target.parentElement.getAttribute('id')}`);
         evt.target.closest('div.ticket-container').parentElement.remove();
       });
     }, false);
   }
   
-  for (const changeStatus of btnStatus) {
+  for (const changeStatus of subscribeWidget.getElementsByClassName('ticket-status')) {
     changeStatus.addEventListener('click', (e) => {
-      statusTicket(e.target.parentElement.getAttribute('id'));
+	  fetch(`http://localhost:7010/?method=ticketStatus&id=${e.target.parentElement.getAttribute('id')}`);
       e.target.parentElement.firstChild.classList.add('status-true');
 	  e.stopPropagation();
     }, false);
   }
   
-  for (const edit of editTicket) {
-    edit.addEventListener('click', (e) => {
+  for (const edit of document.getElementsByClassName('ticket-edit')) {
+    edit.addEventListener('click', (ev) => {
 		const popupEditTicket = document.createElement('DIV');
-        popupEditTicket.classList.add('popup-ticket-add');
-        popupEditTicket.innerHTML = `<button class="btn-change-ok">ОК</button>
-        <button class="btn-change-cancel">Отмена</button>
-        <p class="confirm-title-add">Изменить тикет</p>
-        <p class="title-description">Краткое описание</p>
-        <textarea class="text-description"></textarea>
-        <p class="title-description-full">Полное описание</p>
-        <textarea class="text-description-full"></textarea>`;
-        subscribeWidget.before(popupEditTicket);
-		btnChCancel[0].addEventListener('click', (evt) => {
+		renameTicket(popupEditTicket);
+		document.getElementsByClassName('btn-change-cancel')[0].addEventListener('click', (evt) => {
           popupEditTicket.remove();
         });
-        btnChOk[0].addEventListener('click', (e) => {
-		  changeTicket(e.target.parentElement.getAttribute('id'));
+        document.getElementsByClassName('btn-change-ok')[0].addEventListener('click', (e) => {
+		  document.getElementsByClassName('text-description')[0].addEventListener('keyup', () => {
+			ticketUserFull.name = document.getElementsByClassName('text-description')[0].value;
+		  });
+		  document.getElementsByClassName('text-description-full')[0].addEventListener('keyup', () => {
+		   ticketUserFull.description = document.getElementsByClassName('text-description-full')[0].value;
+		  });
+		  changeTicket(ev.target.parentElement.getAttribute('id'));
           popupEditTicket.remove();
-		});  
-		e.stopPropagation();
-		
+		});
+		ev.stopPropagation();
     }, false);
   }
   
-  for (const ticketGeneral of ticketContainerGeneral) {
+  for (const ticketGeneral of document.getElementsByClassName('ticket-container')) {
     ticketGeneral.addEventListener('click', (e) => {
-      const modalDescription = document.createElement('DIV');
-      modalDescription.classList.add('modal__description');
-      modalDescription.innerHTML = `<div class="close">&times</div><p class="confirm__modal__description">${descriptionTicket(e.target.getAttribute('id'))}</p>`;
-      subscribeWidget.before(modalDescription);
+	  descriptionModalWindow(e.target.getAttribute('id'));
 	  document.getElementsByClassName('close')[0].addEventListener('click', (e) => {
-		  modalDescription.remove();
+		  document.getElementsByClassName('modal__description')[0].remove();
 	  })
-	 
     }, false);
   }
 }
