@@ -36,13 +36,6 @@ export function deleteConfirm() {
       subscribeWidget.before(popupDeleteConfirm);
 }
 
-export function deleteConfirmNew(popupDeleteConfirm) {
-      popupDeleteConfirm.classList.add('popup-ticket');
-      popupDeleteConfirm.innerHTML = `<button class="btn-ok">ОК</button>
-      <button class="btn-cancel">Отмена</button><p class="confirm-title">Удалить тикет</p>
-      <p class="confirm-description">Вы уверены, что хотите удалить тикет? Это действие необратимо.</p>`;
-}
-
 export function renameTicket(popupEditTicket) {
       popupEditTicket.classList.add('popup-ticket-add');
       popupEditTicket.innerHTML = `<button class="btn-change-ok">ОК</button>
