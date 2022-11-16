@@ -1,12 +1,12 @@
 import { newElTIcket } from './ticketContainer';
-import { addElTicket } from './newTickets';
 import { ticketUserFull } from './dataTicketObj';
+import { allTIckLoad } from './app';
 
 const subscribeWidget = document.querySelector('.subscribe');
 const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
 
 export async function descriptionTicket(idt) {
-	let response = await fetch(`http://localhost:7010/?method=ticketDescription&id=${idt}`);
+	let response = await fetch(`http://localhost:7030/?method=ticketDescription&id=${idt}`);
 	if (response.ok) {
 		let txt = await response.text();
 	} else {
@@ -19,12 +19,12 @@ export function xhrUploadTicket() {
 
     xhr.onreadystatechange = function () {
       if (xhr.readyState !== 4) return;
-      addElTicket(JSON.parse(xhr.responseText));
+	  allTIckLoad();
     };
 
     if (xhr.status === 404) return;
 
-    xhr.open('POST', 'http://localhost:7010/?createTicket');
+    xhr.open('POST', 'http://localhost:7030/?method=createTicket');
     xhr.send(JSON.stringify(ticketUserFull));
 }
 
@@ -37,7 +37,7 @@ export function changeTicket(idt) {
 
   if (xhr.status === 404) return;
 
-  xhr.open('POST', `http://localhost:7010/?method=changeTicket&id=${idt}`);
+  xhr.open('POST', `http://localhost:7030/?method=changeTicket&id=${idt}`);
   xhr.send(JSON.stringify(ticketUserFull));
 }
 
@@ -59,4 +59,5 @@ export function addNewTicket() {
         ticketUserFull.description = document.getElementsByClassName('text-description-full')[0].value;
       });
   });
+  
 }
