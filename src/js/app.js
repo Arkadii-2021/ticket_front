@@ -5,34 +5,20 @@ import { ticketUserFull } from './dataTicketObj';
 const subscribeWidget = document.querySelector('.subscribe');
 const subscribeForm = subscribeWidget.querySelector('.subscribe-form');
 
-const xhr = new XMLHttpRequest();
+export function allTIckLoad() {
+	fetch('http://localhost:7030/?method=allTickets')
+	  .then(response => {  
+		return response.json();
+	  })  
+	  .then(json => {
+		getAllTickets(json);
+	  })  
+	  .catch(error => {  
+		log('Request failed', error)  
+	});	
+}
 
-xhr.onreadystatechange = function () {
-  if (xhr.readyState !== 4) return;
-};
-
-xhr.addEventListener('load', () => {
-  if (xhr.status >= 200 && xhr.status < 300) {
-    try {
-      const data = JSON.parse(xhr.responseText);
-      getAllTickets(data);
-    } catch (e) {
-      console.error(e);
-    }
-  }
-});
-
-function getAllTickets(objTickets) {
-  for (const ticket of objTickets) {
-    const newContainer = document.createElement('DIV');
-    newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created);
-    subscribeForm.after(newContainer);
-    if (ticket.status) {
-      newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created, 'status-true');
-    }
-    subscribeForm.after(newContainer);
-  }
-    
+function ticketDelete() {
   for (const btn of subscribeWidget.getElementsByClassName('ticket-delete')) {
     btn.addEventListener('click', (evt) => {
 	  deleteConfirm();
@@ -42,15 +28,31 @@ function getAllTickets(objTickets) {
       });
       document.querySelector('.btn-ok').addEventListener('click', () => {
         document.querySelector('.popup-ticket').remove();
-        fetch(`http://localhost:7010/?method=ticketById&id=${evt.target.parentElement.getAttribute('id')}`);
+        fetch(`http://localhost:7030/?method=ticketById&id=${evt.target.parentElement.getAttribute('id')}`);
         evt.target.closest('div.ticket-container').parentElement.remove();
       });
     }, false);
   }
+}
+
+function getAllTickets(objTickets) {
+  for (const ticket of objTickets) {
+	  if (!window[ticket.id]) {
+		const newContainer = document.createElement('DIV');
+		newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created);
+		subscribeForm.after(newContainer);
+		if (ticket.status) {
+		  newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created, 'status-true');
+		}
+		subscribeForm.after(newContainer);  
+	  }
+  }
+    
+  ticketDelete();
   
   for (const changeStatus of subscribeWidget.getElementsByClassName('ticket-status')) {
     changeStatus.addEventListener('click', (e) => {
-	  fetch(`http://localhost:7010/?method=ticketStatus&id=${e.target.parentElement.getAttribute('id')}`);
+	  fetch(`http://localhost:7030/?method=ticketStatus&id=${e.target.parentElement.getAttribute('id')}`);
       e.target.parentElement.firstChild.classList.add('status-true');
 	  e.stopPropagation();
     }, false);
@@ -87,7 +89,5 @@ function getAllTickets(objTickets) {
   }
 }
 
-xhr.open('GET', 'http://localhost:7010/?method=allTickets');
-xhr.send();
-
+allTIckLoad();
 addNewTicket();
