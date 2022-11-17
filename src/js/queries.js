@@ -40,13 +40,3 @@ export function removeTicket(idt) {
   xhr.open('POST', `http://localhost:7030/?method=removeTicket&id=${idt}`);
   xhr.send(JSON.stringify(ticketUserFull));
 }
-
-export function descriptionTicket(idt) {
-	let response = fetch(`http://localhost:7030/?method=ticketDescription&id=${idt}`)
-  .then(response => {
-    return response.text();
-  })
-	.catch(error => {  
-		log('Request failed', error)  
-	});
-}
