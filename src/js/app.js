@@ -217,7 +217,17 @@ function descriptionModalWindow(id) {
   
   const confirmModalDescription = document.createElement('p');
   confirmModalDescription.classList.add('confirm__modal__description');
-  confirmModalDescription.textContent = descriptionTicket(id);
+  
+  fetch(`http://localhost:7030/?method=ticketDescription&id=${id}`)
+  .then(response => {
+    return response.text();
+  })
+  .then(data => {
+    confirmModalDescription.textContent = data})
+	.catch(error => {  
+		log('Request failed', error)  
+	});
+  
   subscribeWidget.before(modalDescription);
   modalDescription.append(times, confirmModalDescription);
   document.querySelector('.close').addEventListener('click', () => {
