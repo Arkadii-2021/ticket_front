@@ -1,4 +1,4 @@
-import { xhrUploadTicket, changeTicket, removeTicket, descriptionTicket } from './queries';
+import { xhrUploadTicket, changeTicket, removeTicket } from './queries';
 import { ticketUserFull } from './dataTicketObj';
 
 const subscribeWidget = document.querySelector('.subscribe');
