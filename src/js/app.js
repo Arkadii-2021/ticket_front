@@ -1,5 +1,4 @@
-import { changeTicket, addNewTicket } from './queries';
-import { ticketContainerHtmlEl, deleteConfirm, renameTicket, descriptionModalWindow } from './ticketContainer';
+import { xhrUploadTicket, changeTicket, removeTicket, descriptionTicket } from './queries';
 import { ticketUserFull } from './dataTicketObj';
 
 const subscribeWidget = document.querySelector('.subscribe');
@@ -11,82 +10,219 @@ export function allTIckLoad() {
 		return response.json();
 	  })  
 	  .then(json => {
-		getAllTickets(json);
+		renderTicket(json);
 	  })  
 	  .catch(error => {  
 		log('Request failed', error)  
 	});	
 }
 
-function ticketDelete() {
-  for (const btn of subscribeWidget.getElementsByClassName('ticket-delete')) {
-    btn.addEventListener('click', (evt) => {
-	  deleteConfirm();
-	  evt.stopPropagation();
-      document.querySelector('.btn-cancel').addEventListener('click', (evt) => {
-        document.querySelector('.popup-ticket').remove();
+function renderTicket(tiсket) {
+	for (const ticketEl of tiсket) {
+		if (!window[ticketEl.id]) {
+      const ticketContainer = document.createElement('div');
+      ticketContainer.classList.add('ticket-container');
+      ticketContainer.setAttribute('id', ticketEl.id);
+        
+      const ticketStatus = document.createElement('div');
+      ticketStatus.classList.add('ticket-status');
+      ticketStatus.classList.add(ticketEl.status);
+        
+      const ticketName = document.createElement('div');
+      ticketName.classList.add('ticket-name');
+      ticketName.textContent = ticketEl.name;
+              
+      const ticketDatetime = document.createElement('div');
+      ticketDatetime.classList.add('ticket-datetime');
+      ticketDatetime.textContent = ticketEl.created;
+        
+      const ticketEdit = document.createElement('div');
+      ticketEdit.classList.add('ticket-edit');
+      ticketEdit.classList.add('edit');
+        
+      const ticketDelete = document.createElement('div');
+      ticketDelete.classList.add('ticket-delete');
+        
+      subscribeForm.after(ticketContainer);
+      ticketContainer.append(ticketStatus, ticketName, ticketDatetime, ticketEdit, ticketDelete);
+
+      ticketContainer.querySelector('.ticket-edit').addEventListener('click', (ed) => {
+        renderModalEditTicket(ticketEl, ed);
+        ed.stopPropagation();
       });
-      document.querySelector('.btn-ok').addEventListener('click', () => {
-        document.querySelector('.popup-ticket').remove();
-        fetch(`http://localhost:7030/?method=ticketById&id=${evt.target.parentElement.getAttribute('id')}`);
-        evt.target.closest('div.ticket-container').parentElement.remove();
+      
+      ticketContainer.querySelector('.ticket-delete').addEventListener('click', (ed) => {
+        deleteConfirm(ed);
+        ed.stopPropagation();
       });
-    }, false);
-  }
+      
+      ticketContainer.querySelector('.ticket-status').addEventListener('click', (ed) => {
+        fetch(`http://localhost:7030/?method=ticketStatus&id=${ed.target.parentElement.getAttribute('id')}`)
+        ed.target.classList.replace('false', 'true');
+        ed.stopPropagation();
+      });
+      
+      document.querySelector('.ticket-container').addEventListener('click', (ed) => {
+        descriptionModalWindow(ed.target.id);
+      });
+    }
+	}
 }
 
-function getAllTickets(objTickets) {
-  for (const ticket of objTickets) {
-	  if (!window[ticket.id]) {
-		const newContainer = document.createElement('DIV');
-		newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created);
-		subscribeForm.after(newContainer);
-		if (ticket.status) {
-		  newContainer.innerHTML = ticketContainerHtmlEl(ticket.id, ticket.name, ticket.created, 'status-true');
-		}
-		subscribeForm.after(newContainer);  
-	  }
-  }
+function deleteConfirm(ed) {
+  const popupDeleteConfirm = document.createElement('DIV');
+  popupDeleteConfirm.classList.add('popup-ticket');
+  popupDeleteConfirm.innerHTML = `<button class="btn-ok">ОК</button>
+  <button class="btn-cancel">Отмена</button><p class="confirm-title">Удалить тикет</p>
+  <p class="confirm-description">Вы уверены, что хотите удалить тикет? Это действие необратимо.</p>`;
+  subscribeWidget.before(popupDeleteConfirm);
+  
+  document.querySelector('.btn-ok').addEventListener('click', (e) => {
+    removeTicket(ed.target.parentElement.getAttribute('id'));
+    ed.target.parentElement.remove();
+    e.target.parentElement.remove();
+  })
+  
+  document.querySelector('.btn-cancel').addEventListener('click', (e) => {
+    e.target.parentElement.remove();
+  })
+}
+
+function renderModalEditTicket(ticketEl, ed) {
+  const popupAddTicket = document.createElement('DIV');
+  popupAddTicket.classList.add('popup-ticket-add');
+      
+  const btnAddOk = document.createElement('button');
+  btnAddOk.classList.add('btn-add-ok');
+  btnAddOk.textContent = 'OK';
+      
+  const btnAddCancel = document.createElement('button');
+  btnAddCancel.classList.add('btn-add-cancel');
+  btnAddCancel.textContent = 'Отмена';
+      
+  const confirmTitleAdd = document.createElement('p');
+  confirmTitleAdd.classList.add('confirm-title-add');
+  confirmTitleAdd.textContent = 'Редактировать тикет';
+      
+  const titleDescription = document.createElement('p');
+  titleDescription.classList.add('title-description');
+  titleDescription.textContent = 'Краткое описание';
+      
+  const textDescription = document.createElement('textarea');
+  textDescription.classList.add('text-description');
+      
+  const titleDescriptionFull = document.createElement('p');
+  titleDescriptionFull.classList.add('title-description-full');
+  titleDescriptionFull.textContent = 'Подробное описание';
+      
+  const textDescriptionFull = document.createElement('textarea');
+  textDescriptionFull.classList.add('text-description-full');     
+
+  subscribeWidget.before(popupAddTicket);
+  popupAddTicket.append(
+    btnAddOk, btnAddCancel, confirmTitleAdd, titleDescription, 
+    textDescription, titleDescriptionFull, textDescriptionFull
+  );
+  renameTicket(ticketEl, ed);
+}
+
+function renderModalAddTicket(ticketEl) {
+  const popupAddTicket = document.createElement('DIV');
+  popupAddTicket.classList.add('popup-ticket-add');
+      
+  const btnAddOk = document.createElement('button');
+  btnAddOk.classList.add('btn-add-ok');
+  btnAddOk.textContent = 'OK';
+      
+  const btnAddCancel = document.createElement('button');
+  btnAddCancel.classList.add('btn-add-cancel');
+  btnAddCancel.textContent = 'Отмена';
+      
+  const confirmTitleAdd = document.createElement('p');
+  confirmTitleAdd.classList.add('confirm-title-add');
+  confirmTitleAdd.textContent = 'Добавить тикет';
+      
+  const titleDescription = document.createElement('p');
+  titleDescription.classList.add('title-description');
+  titleDescription.textContent = 'Краткое описание';
+      
+  const textDescription = document.createElement('textarea');
+  textDescription.classList.add('text-description');
+      
+  const titleDescriptionFull = document.createElement('p');
+  titleDescriptionFull.classList.add('title-description-full');
+  titleDescriptionFull.textContent = 'Подробное описание';
+      
+  const textDescriptionFull = document.createElement('textarea');
+  textDescriptionFull.classList.add('text-description-full');     
+
+  subscribeWidget.before(popupAddTicket);
+  popupAddTicket.append(
+    btnAddOk, btnAddCancel, confirmTitleAdd, titleDescription, 
+    textDescription, titleDescriptionFull, textDescriptionFull
+  );
+}
+
+function addNewTicket() {
+  subscribeForm.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+	  renderModalAddTicket();
+    document.querySelector('.btn-add-ok').addEventListener('click', () => {
+      xhrUploadTicket();
+      document.querySelector('.popup-ticket-add').remove();
+    });
+    document.querySelector('.btn-add-cancel').addEventListener('click', () => {
+      document.querySelector('.popup-ticket-add').remove();
+    });
+    document.querySelector('.text-description').addEventListener('keyup', () => {
+      ticketUserFull.name = document.querySelector('.text-description').value;
+    });
+    document.querySelector('.text-description-full').addEventListener('keyup', () => {
+      ticketUserFull.description = document.querySelector('.text-description-full').value;
+    });
+  });
+}
+
+function renameTicket(ticketEl, ed) {
+  document.querySelector('.btn-add-ok').addEventListener('click', (e) => {
+    ticketEl.name = ticketUserFull.name
+    ticketEl.description = ticketUserFull.description;
+    changeTicket(ticketEl);
+      
+    document.querySelector('.popup-ticket-add').remove();
+    ed.target.parentElement.childNodes[1].textContent = ticketEl.name;
+    ed.target.parentElement.childNodes[2].textContent = ticketEl.created;
+  });
     
-  ticketDelete();
+  document.querySelector('.btn-add-cancel').addEventListener('click', () => {
+    document.querySelector('.popup-ticket-add').remove();
+  });
+    
+  document.querySelector('.text-description').addEventListener('keyup', () => {
+    ticketUserFull.name = document.querySelector('.text-description').value;
+  });
+    
+  document.querySelector('.text-description-full').addEventListener('keyup', () => {
+    ticketUserFull.description = document.querySelector('.text-description-full').value;
+  });   
+}
+
+function descriptionModalWindow(id) {
+  const modalDescription = document.createElement('DIV');
+  modalDescription.classList.add('modal__description');
   
-  for (const changeStatus of subscribeWidget.getElementsByClassName('ticket-status')) {
-    changeStatus.addEventListener('click', (e) => {
-	  fetch(`http://localhost:7030/?method=ticketStatus&id=${e.target.parentElement.getAttribute('id')}`);
-      e.target.parentElement.firstChild.classList.add('status-true');
-	  e.stopPropagation();
-    }, false);
-  }
+  const times = document.createElement('div');
+  times.classList.add('close');
+  times.innerText = '\u2716';
   
-  for (const edit of document.getElementsByClassName('ticket-edit')) {
-    edit.addEventListener('click', (ev) => {
-		const popupEditTicket = document.createElement('DIV');
-		renameTicket(popupEditTicket);
-		document.getElementsByClassName('btn-change-cancel')[0].addEventListener('click', (evt) => {
-          popupEditTicket.remove();
-        });
-        document.getElementsByClassName('btn-change-ok')[0].addEventListener('click', (e) => {
-		  document.getElementsByClassName('text-description')[0].addEventListener('keyup', () => {
-			ticketUserFull.name = document.getElementsByClassName('text-description')[0].value;
-		  });
-		  document.getElementsByClassName('text-description-full')[0].addEventListener('keyup', () => {
-		   ticketUserFull.description = document.getElementsByClassName('text-description-full')[0].value;
-		  });
-		  changeTicket(ev.target.parentElement.getAttribute('id'));
-          popupEditTicket.remove();
-		});
-		ev.stopPropagation();
-    }, false);
-  }
-  
-  for (const ticketGeneral of document.getElementsByClassName('ticket-container')) {
-    ticketGeneral.addEventListener('click', (e) => {
-	  descriptionModalWindow(e.target.getAttribute('id'));
-	  document.getElementsByClassName('close')[0].addEventListener('click', (e) => {
-		  document.getElementsByClassName('modal__description')[0].remove();
-	  })
-    }, false);
-  }
+  const confirmModalDescription = document.createElement('p');
+  confirmModalDescription.classList.add('confirm__modal__description');
+  confirmModalDescription.textContent = descriptionTicket(id);
+  subscribeWidget.before(modalDescription);
+  modalDescription.append(times, confirmModalDescription);
+  document.querySelector('.close').addEventListener('click', () => {
+    modalDescription.remove();
+  }); 
 }
 
 allTIckLoad();
