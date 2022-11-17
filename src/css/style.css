@@ -24,6 +24,7 @@ body {
   line-height: 1.5;
   background: none;
   border-radius: .50rem;
+  cursor: pointer;
 }
 
 .form-control {
@@ -62,6 +63,7 @@ body {
 	outline-style: solid;
 	outline-width: 1px;
   border-radius: 50%;	
+  cursor: pointer;
 }
 
 .true:after {
@@ -74,10 +76,12 @@ body {
 
 .edit:after {
   content: '✎';
+  cursor: pointer;
 }
 
 .ticket-delete:after {
   content: '✖';
+  cursor: pointer;
 }
 
 .popup-ticket {
@@ -111,6 +115,7 @@ body {
   line-height: 1.5;
   background: none;
   border-radius: .50rem;
+  cursor: pointer;
 }
 
 .btn-cancel {
@@ -126,6 +131,7 @@ body {
   line-height: 1.5;
   background: none;
   border-radius: .50rem;
+  cursor: pointer;
 }
 
 .btn-add-ok, .btn-change-ok {
@@ -141,6 +147,7 @@ body {
   line-height: 1.5;
   background: none;
   border-radius: .50rem;
+  cursor: pointer;
 }
 
 .btn-add-cancel, .btn-change-cancel {
@@ -156,6 +163,7 @@ body {
   line-height: 1.5;
   background: none;
   border-radius: .50rem;
+  cursor: pointer;
 }
 
 .confirm-title {
