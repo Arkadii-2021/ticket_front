@@ -18,6 +18,7 @@ export function allTIckLoad() {
 }
 
 function renderTicket(tiсket) {
+  document.querySelectorAll('.ticket-container').forEach(el => el.remove());
 	for (const ticketEl of tiсket) {
 		if (!window[ticketEl.id]) {
       const ticketContainer = document.createElement('div');
@@ -58,7 +59,7 @@ function renderTicket(tiсket) {
       
       ticketContainer.querySelector('.ticket-status').addEventListener('click', (ed) => {
         fetch(`http://localhost:7030/?method=ticketStatus&id=${ed.target.parentElement.getAttribute('id')}`)
-        ed.target.classList.replace('false', 'true');
+        allTIckLoad();
         ed.stopPropagation();
       });
       
@@ -79,8 +80,8 @@ function deleteConfirm(ed) {
   
   document.querySelector('.btn-ok').addEventListener('click', (e) => {
     removeTicket(ed.target.parentElement.getAttribute('id'));
-    ed.target.parentElement.remove();
     e.target.parentElement.remove();
+    allTIckLoad();
   })
   
   document.querySelector('.btn-cancel').addEventListener('click', (e) => {
@@ -168,36 +169,20 @@ function addNewTicket() {
     evt.preventDefault();
 	  renderModalAddTicket();
     document.querySelector('.btn-add-ok').addEventListener('click', () => {
+      ticketUserFull.name = document.querySelector('.text-description').value;
+      ticketUserFull.description = document.querySelector('.text-description-full').value;
       xhrUploadTicket();
+      allTIckLoad();
       document.querySelector('.popup-ticket-add').remove();
     });
     document.querySelector('.btn-add-cancel').addEventListener('click', () => {
       document.querySelector('.popup-ticket-add').remove();
     });
-    document.querySelector('.text-description').addEventListener('keyup', () => {
-      ticketUserFull.name = document.querySelector('.text-description').value;
-    });
-    document.querySelector('.text-description-full').addEventListener('keyup', () => {
-      ticketUserFull.description = document.querySelector('.text-description-full').value;
-    });
+
   });
 }
 
 function renameTicket(ticketEl, ed) {
-  document.querySelector('.btn-add-ok').addEventListener('click', (e) => {
-    ticketEl.name = ticketUserFull.name
-    ticketEl.description = ticketUserFull.description;
-    changeTicket(ticketEl);
-      
-    document.querySelector('.popup-ticket-add').remove();
-    ed.target.parentElement.childNodes[1].textContent = ticketEl.name;
-    ed.target.parentElement.childNodes[2].textContent = ticketEl.created;
-  });
-    
-  document.querySelector('.btn-add-cancel').addEventListener('click', () => {
-    document.querySelector('.popup-ticket-add').remove();
-  });
-    
   document.querySelector('.text-description').addEventListener('keyup', () => {
     ticketUserFull.name = document.querySelector('.text-description').value;
   });
@@ -205,6 +190,21 @@ function renameTicket(ticketEl, ed) {
   document.querySelector('.text-description-full').addEventListener('keyup', () => {
     ticketUserFull.description = document.querySelector('.text-description-full').value;
   });   
+  
+  document.querySelector('.btn-add-ok').addEventListener('click', (e) => {
+    ticketEl.name = ticketUserFull.name
+    ticketEl.description = ticketUserFull.description;
+    changeTicket(ticketEl);
+    
+    document.querySelector('.popup-ticket-add').remove();
+    allTIckLoad();
+  });
+    
+  document.querySelector('.btn-add-cancel').addEventListener('click', () => {
+    document.querySelector('.popup-ticket-add').remove();
+  });
+    
+
 }
 
 function descriptionModalWindow(id) {
